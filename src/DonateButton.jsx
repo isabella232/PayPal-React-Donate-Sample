@@ -2,25 +2,17 @@ import { useRef, useEffect } from "react";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function DonateButton({ amount }) {
-  // ** `amountRef` keeps track of the selected donation amount when a change is made in the `AmountPicker` component **
+  // ** `amountRef` keeps track of the selected donation amount when a change is made in the `AmountPicker` component without rerendering the Donate button **
   const amountRef = useRef(amount);
 
   useEffect(() => {
     amountRef.current = amount;
   }, [amount]);
 
-  function onApproveOrder(data, actions) {
-    return actions.order.capture().then((details) => {
-      const name = details.payer.name.given_name;
-      alert(`Donation completed by ${name}`);
-    });
-  }
-
   return (
     <PayPalButtons
       style={{ label: "donate" }}
-      // ** uncomment `fundingSource="paypal` to show only the PayPal Donate button **
-      // fundingSource="paypal"
+      fundingSource="paypal"
       createOrder={(data, actions) => {
         return actions.order.create({
           purchase_units: [
@@ -36,9 +28,9 @@ export default function DonateButton({ amount }) {
               },
               items: [
                 {
-                  name: "Donate to Kitty's House",
+                  name: "Donation to Kitty's House",
                   description:
-                    "All proceeds directly support Kitty's House Cat Rescue",
+                    "All proceeds directly support Kitty's House Cat Rescue. Thank you.",
                   quantity: "1",
                   unit_amount: {
                     currency_code: "USD",
@@ -51,7 +43,12 @@ export default function DonateButton({ amount }) {
           ],
         });
       }}
-      onApprove={(data, actions) => onApproveOrder(data, actions)}
+      onApprove={(data, actions) =>
+        actions.order.capture().then((details) => {
+          const name = details.payer.name.given_name;
+          alert(`Donation completed by ${name} for \$${amountRef.current}`);
+        })
+      }
     />
   );
 }

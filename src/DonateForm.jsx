@@ -16,7 +16,7 @@ export default function DonateForm() {
       />
       <div className=" w-full">
         {/* ** `currency` and `amount` get passed to the Donate button so that the selected amount is populated at checkout **  */}
-        <DonateButton currency="USD" amount={amount} />
+        <DonateButton amount={amount} />
       </div>
     </form>
   );

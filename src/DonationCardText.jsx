@@ -21,7 +21,6 @@ export default function DonationCardText({ children }) {
             a lot of love to give!
           </p>
           <p>Help us continue our mission and donate to Kitty's House today.</p>
-
           {children}
         </div>
       </div>
